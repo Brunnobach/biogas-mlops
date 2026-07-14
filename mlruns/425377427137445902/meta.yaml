@@ -1,6 +1,0 @@
-artifact_location: file:///root/biogas-mlops/mlruns/425377427137445902
-creation_time: 1784042161399
-experiment_id: '425377427137445902'
-last_update_time: 1784042161399
-lifecycle_stage: active
-name: biogas-production-forecasting
