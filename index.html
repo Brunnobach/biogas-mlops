@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biogas MLOps | Brunno Bachmann</title>
+    <style>
+        :root { --primary: #2d7d46; --dark: #1a1a2e; --light: #f4f4f4; --text: #333; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--light); color: var(--text); line-height: 1.6; }
+        header { background: linear-gradient(135deg, var(--dark), var(--primary)); color: white; padding: 4rem 2rem; text-align: center; }
+        header h1 { margin: 0; font-size: 2.5rem; }
+        header p { max-width: 600px; margin: 1rem auto 0; font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        .section { background: white; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .section h2 { color: var(--primary); margin-top: 0; }
+        .badges { margin: 1rem 0; }
+        .badge { display: inline-block; background: var(--primary); color: white; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.85rem; margin: 0.2rem; }
+        .btn { display: inline-block; background: var(--primary); color: white; padding: 0.8rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 1rem; }
+        .btn:hover { background: #236a39; }
+        footer { text-align: center; padding: 2rem; color: #666; font-size: 0.9rem; }
+        code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; }
+        pre { background: #f0f0f0; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌱 Biogas MLOps</h1>
+        <p>End-to-end MLOps pipeline for biogas production forecasting — experiment tracking, model registry, containerized API and CI/CD.</p>
+        <a href="https://github.com/Brunnobach/biogas-mlops" class="btn">View on GitHub</a>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>What this project demonstrates</h2>
+            <div class="badges">
+                <span class="badge">MLOps</span>
+                <span class="badge">MLflow</span>
+                <span class="badge">FastAPI</span>
+                <span class="badge">Docker</span>
+                <span class="badge">CI/CD</span>
+                <span class="badge">scikit-learn</span>
+            </div>
+            <p>This project shows how to take a biogas production forecasting problem and turn it into a production-ready ML system, including reproducible training, model versioning, API inference and automated testing.</p>
+        </div>
+
+        <div class="section">
+            <h2>Architecture</h2>
+            <pre>
+Raw Data → Feature Engineering → Model Training → MLflow Registry → FastAPI API (Docker)
+            </pre>
+        </div>
+
+        <div class="section">
+            <h2>Quick Start</h2>
+            <pre><code>git clone https://github.com/Brunnobach/biogas-mlops.git
+cd biogas-mlops
+pip install -r requirements.txt
+python src/models/train.py
+mlflow ui
+python src/api/app.py</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>About the author</h2>
+            <p>Built by <strong>Brunno Bachmann</strong>, CTO and engineering leader with 6+ years in renewable energy and biogas, now transitioning into MLOps and Applied AI.</p>
+            <a href="https://www.linkedin.com/in/brunno-bachmann-865429173">LinkedIn</a> · 
+            <a href="https://github.com/Brunnobach">GitHub</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Brunno Bachmann · <a href="https://github.com/Brunnobach/biogas-mlops">GitHub Repository</a></p>
+    </footer>
+</body>
+</html>
