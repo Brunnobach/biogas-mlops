@@ -9,24 +9,29 @@
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--light); color: var(--text); line-height: 1.6; }
         header { background: linear-gradient(135deg, var(--dark), var(--primary)); color: white; padding: 4rem 2rem; text-align: center; }
         header h1 { margin: 0; font-size: 2.5rem; }
-        header p { max-width: 600px; margin: 1rem auto 0; font-size: 1.1rem; opacity: 0.9; }
-        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        header p { max-width: 650px; margin: 1rem auto 0; font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 950px; margin: 0 auto; padding: 2rem; }
         .section { background: white; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .section h2 { color: var(--primary); margin-top: 0; }
         .badges { margin: 1rem 0; }
         .badge { display: inline-block; background: var(--primary); color: white; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.85rem; margin: 0.2rem; }
-        .btn { display: inline-block; background: var(--primary); color: white; padding: 0.8rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 1rem; }
+        .btn { display: inline-block; background: var(--primary); color: white; padding: 0.8rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 0.5rem 0.5rem 0 0; }
         .btn:hover { background: #236a39; }
+        .btn.secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn.secondary:hover { background: var(--primary); color: white; }
         footer { text-align: center; padding: 2rem; color: #666; font-size: 0.9rem; }
         code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; }
-        pre { background: #f0f0f0; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+        pre { background: #1a1a2e; color: #f4f4f4; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+        .metric { display: inline-block; text-align: center; padding: 1rem; margin: 0.5rem; background: #f9f9f9; border-radius: 8px; min-width: 120px; }
+        .metric strong { display: block; font-size: 1.5rem; color: var(--primary); }
     </style>
 </head>
 <body>
     <header>
         <h1>🌱 Biogas MLOps</h1>
-        <p>End-to-end MLOps pipeline for biogas production forecasting — experiment tracking, model registry, containerized API and CI/CD.</p>
+        <p>End-to-end MLOps pipeline for biogas production forecasting — experiment tracking, model registry, containerized FastAPI inference and CI/CD.</p>
         <a href="https://github.com/Brunnobach/biogas-mlops" class="btn">View on GitHub</a>
+        <a href="https://www.linkedin.com/in/brunno-bachmann-865429173" class="btn secondary">Connect on LinkedIn</a>
     </header>
 
     <div class="container">
@@ -39,15 +44,36 @@
                 <span class="badge">Docker</span>
                 <span class="badge">CI/CD</span>
                 <span class="badge">scikit-learn</span>
+                <span class="badge">pytest</span>
             </div>
-            <p>This project shows how to take a biogas production forecasting problem and turn it into a production-ready ML system, including reproducible training, model versioning, API inference and automated testing.</p>
+            <p>This project takes a real industrial problem — forecasting biogas production in anaerobic digesters — and implements a complete production ML system. It includes data generation, feature engineering, model training with MLflow, a FastAPI inference service and automated testing.</p>
+        
+            <div class="metric">
+                <strong>6+</strong>
+                Features
+            </div>
+            <div class="metric">
+                <strong>5K</strong>
+                Training rows
+            </div>
+            <div class="metric">
+                <strong>R² > 0.85</strong>
+                Target performance
+            </div>
         </div>
 
         <div class="section">
             <h2>Architecture</h2>
             <pre>
-Raw Data → Feature Engineering → Model Training → MLflow Registry → FastAPI API (Docker)
+Raw Data → Feature Engineering → Model Training → MLflow Registry → FastAPI Inference API
             </pre>
+            <ul>
+                <li><strong>Data generation:</strong> Synthetic biogas operational data inspired by real biodigesters</li>
+                <li><strong>Feature engineering:</strong> Time-based cyclical features, interaction terms and lag variables</li>
+                <li><strong>Model:</strong> Gradient Boosting Regressor with scikit-learn pipeline</li>
+                <li><strong>Tracking:</strong> MLflow for experiments, parameters, metrics and artifacts</li>
+                <li><strong>Serving:</strong> Dockerized FastAPI with /predict and /health endpoints</li>
+            </ul>
         </div>
 
         <div class="section">
@@ -55,9 +81,23 @@ Raw Data → Feature Engineering → Model Training → MLflow Registry → Fast
             <pre><code>git clone https://github.com/Brunnobach/biogas-mlops.git
 cd biogas-mlops
 pip install -r requirements.txt
+python src/data/generate_dataset.py
 python src/models/train.py
-mlflow ui
-python src/api/app.py</code></pre>
+uvicorn src.api.app:app --reload</code></pre>
+
+            <h3>Predict</h3>
+            <pre><code>curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "temperature": 37.0, "ph": 7.2, "organic_load": 3.5,
+    "hydraulic_retention_time": 25, "substrate_type": "cattle_swine_poultry",
+    "humidity": 85, "ambient_temperature": 22,
+    "previous_day_production": 120, "month": 6
+  }'</code></pre>
+
+            <h3>Docker Compose (full stack)</h3>
+            <pre><code>docker-compose up -d</code></pre>
+            <p>Access MLflow at <code>http://localhost:5000</code> and API docs at <code>http://localhost:8000/docs</code>.</p>
         </div>
 
         <div class="section">

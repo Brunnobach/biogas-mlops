@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  mlflow:
+    image: python:3.11-slim
+    container_name: biogas-mlflow
+    working_dir: /mlflow
+    volumes:
+      - ./mlruns:/mlflow/mlruns
+      - ./artifacts:/mlflow/artifacts
+    ports:
+      - "5000:5000"
+    command: >
+      bash -c "pip install --no-cache-dir mlflow==2.15.1 &&
+      mlflow server --host 0.0.0.0 --port 5000
+      --backend-store-uri /mlflow/mlruns
+      --default-artifact-root /mlflow/artifacts"
+    networks:
+      - biogas-mlops-network
+
+  api:
+    build: .
+    container_name: biogas-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+    depends_on:
+      - mlflow
+    networks:
+      - biogas-mlops-network
+    command: >
+      bash -c "python src/data/generate_dataset.py &&
+      python src/models/train.py &&
+      uvicorn src.api.app:app --host 0.0.0.0 --port 8000"
+
+networks:
+  biogas-mlops-network:
+    driver: bridge
