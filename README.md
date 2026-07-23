@@ -6,9 +6,11 @@ A production-ready machine learning system that predicts daily biogas production
 
 ---
 
-## 🌐 Live Portfolio
+## Live portfolio & predictor UI
 
-📊 **Project documentation:** https://brunnobach.github.io/biogas-mlops/
+**Interactive predictor:** https://brunnobach.github.io/biogas-mlops/
+
+The GitHub Pages app is a usable forecasting tool (Portuguese UI). On Pages it runs a client-side physics-inspired formula (demo mode). With the local FastAPI service running, click **Conectar** and predictions use the trained model via `POST /predict` (CORS enabled).
 
 ---
 
