@@ -1,25 +1,36 @@
+# Virtual environments
 .venv/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
 venv/
+env/
 ENV/
-.env
+
+# Python bytecode and packaging
+__pycache__/
+*.py[cod]
+*$py.class
 *.egg-info/
 dist/
 build/
+.Python
+
+# Test / coverage
 .pytest_cache/
 .coverage
 htmlcov/
-*.log
+.mypy_cache/
+.ruff_cache/
+
+# Local training artifacts
 mlruns/
+artifacts/
+data/biogas_production.csv
 models/biogas_model.pkl
 models/metrics.json
-data/biogas_production.csv
+
+# Secrets and editor junk
+.env
 .DS_Store
 *.swp
 *.swo
 *~
+*.log
