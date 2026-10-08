@@ -20,10 +20,21 @@ def load_data(path: Path = Path("data/biogas_production.csv")) -> pd.DataFrame:
 def build_features(df: pd.DataFrame) -> pd.DataFrame:
     """Create time-based and interaction features."""
     df = df.copy()
-    if "date" not in df.columns:
-        df["date"] = pd.Timestamp.now().normalize()
-    else:
+    if "date" in df.columns:
         df["date"] = pd.to_datetime(df["date"])
+    elif "month" in df.columns:
+        # Inference payloads send month, not a calendar date. Use mid-month so
+        # cyclical encodings follow the requested month instead of "today".
+        year = int(pd.Timestamp.now().year)
+        months = (
+            pd.to_numeric(df["month"], errors="coerce")
+            .fillna(1)
+            .astype(int)
+            .clip(1, 12)
+        )
+        df["date"] = pd.to_datetime({"year": year, "month": months, "day": 15})
+    else:
+        df["date"] = pd.Timestamp.now().normalize()
 
     # Time-based features
     df["day_of_year"] = df["date"].dt.dayofyear

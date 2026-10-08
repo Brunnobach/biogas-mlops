@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biogas Predictor | Brunno Bachmann</title>
-    <meta name="description" content="Ferramenta de previsão de produção diária de biogás a partir de parâmetros do biodigestor.">
+    <meta name="description" content="Daily biogas production forecast from digester operating parameters.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -404,30 +404,30 @@
         <header class="topbar">
             <div class="brand">
                 <h1>Biogas Predictor</h1>
-                <p>Previsão de produção diária a partir dos parâmetros do biodigestor.</p>
+                <p>Daily production forecast from digester operating parameters.</p>
             </div>
             <div class="status-row">
-                <span class="mode-chip demo" id="mode-chip">Modo demo</span>
+                <span class="mode-chip demo" id="mode-chip">Demo mode</span>
                 <div class="api-config">
-                    <input type="url" id="api-base" aria-label="URL da API" placeholder="http://localhost:8000">
-                    <button type="button" id="btn-check-api">Conectar</button>
+                    <input type="url" id="api-base" aria-label="API URL" placeholder="http://localhost:8000">
+                    <button type="button" id="btn-check-api">Connect</button>
                 </div>
             </div>
         </header>
 
         <div class="layout">
             <section class="panel">
-                <h2>Parâmetros operacionais</h2>
+                <h2>Operating parameters</h2>
                 <div class="presets">
-                    <button type="button" class="preset-btn active" data-preset="typical">Cenário típico</button>
-                    <button type="button" class="preset-btn" data-preset="optimal">Ótimo</button>
-                    <button type="button" class="preset-btn" data-preset="stress">Estresse</button>
+                    <button type="button" class="preset-btn active" data-preset="typical">Typical</button>
+                    <button type="button" class="preset-btn" data-preset="optimal">Optimal</button>
+                    <button type="button" class="preset-btn" data-preset="stress">Stress</button>
                 </div>
 
                 <form id="predict-form" novalidate>
                     <div class="fields">
                         <div class="field">
-                            <label for="temperature">Temperatura digestor</label>
+                            <label for="temperature">Digester temperature</label>
                             <input type="number" id="temperature" name="temperature" min="30" max="55" step="0.1" required>
                             <span class="hint">30–55 °C</span>
                         </div>
@@ -437,74 +437,74 @@
                             <span class="hint">6.0–8.5</span>
                         </div>
                         <div class="field">
-                            <label for="organic_load">Carga orgânica</label>
+                            <label for="organic_load">Organic load</label>
                             <input type="number" id="organic_load" name="organic_load" min="0.5" max="8" step="0.1" required>
-                            <span class="hint">kg VS/m³/dia</span>
+                            <span class="hint">kg VS/m³/day</span>
                         </div>
                         <div class="field">
-                            <label for="hydraulic_retention_time">Tempo de retenção</label>
+                            <label for="hydraulic_retention_time">Retention time</label>
                             <input type="number" id="hydraulic_retention_time" name="hydraulic_retention_time" min="10" max="60" step="1" required>
                             <span class="hint">10–60 dias</span>
                         </div>
                         <div class="field full">
-                            <label for="substrate_type">Tipo de substrato</label>
+                            <label for="substrate_type">Substrate type</label>
                             <select id="substrate_type" name="substrate_type" required>
-                                <option value="cattle_swine_poultry">Resíduos pecuários</option>
-                                <option value="energy_crops">Culturas energéticas</option>
-                                <option value="food_waste">Resíduos alimentares</option>
-                                <option value="agricultural_residue">Resíduo agrícola</option>
+                                <option value="cattle_swine_poultry">Livestock waste</option>
+                                <option value="energy_crops">Energy crops</option>
+                                <option value="food_waste">Food waste</option>
+                                <option value="agricultural_residue">Agricultural residue</option>
                             </select>
                         </div>
                         <div class="field">
-                            <label for="humidity">Umidade</label>
+                            <label for="humidity">Moisture</label>
                             <input type="number" id="humidity" name="humidity" min="60" max="98" step="0.5" required>
                             <span class="hint">60–98 %</span>
                         </div>
                         <div class="field">
-                            <label for="ambient_temperature">Temp. ambiente</label>
+                            <label for="ambient_temperature">Ambient temp.</label>
                             <input type="number" id="ambient_temperature" name="ambient_temperature" min="5" max="40" step="0.5" required>
                             <span class="hint">5–40 °C</span>
                         </div>
                         <div class="field">
-                            <label for="previous_day_production">Produção dia anterior</label>
+                            <label for="previous_day_production">Previous-day production</label>
                             <input type="number" id="previous_day_production" name="previous_day_production" min="0" step="0.1" required>
                             <span class="hint">m³</span>
                         </div>
                         <div class="field">
-                            <label for="month">Mês</label>
+                            <label for="month">Month</label>
                             <input type="number" id="month" name="month" min="1" max="12" step="1" required>
                             <span class="hint">1–12</span>
                         </div>
                     </div>
 
                     <div class="actions">
-                        <button type="submit" class="btn-primary" id="btn-predict">Calcular previsão</button>
+                        <button type="submit" class="btn-primary" id="btn-predict">Run forecast</button>
                     </div>
                     <div class="error-box" id="error-box" role="alert"></div>
                 </form>
             </section>
 
             <aside class="panel result-panel">
-                <h2>Resultado</h2>
+                <h2>Result</h2>
                 <div class="result-empty" id="result-empty">
-                    <strong>Aguardando cálculo</strong>
-                    Ajuste os parâmetros ou escolha um preset e clique em calcular. No GitHub Pages a fórmula demo roda no browser; com a API local, usa o modelo treinado.
+                    <strong>Waiting for a forecast</strong>
+                    Set the parameters or pick a preset, then run the forecast. On GitHub Pages a physics-inspired demo formula runs in the browser; with the local API, predictions use the trained model.
                 </div>
                 <div class="result-live" id="result-live">
                     <div class="metric-main">
-                        <div class="label">Produção prevista</div>
+                        <div class="label">Predicted production</div>
                         <div>
                             <span class="value" id="pred-value">—</span>
-                            <span class="unit">m³/dia</span>
+                            <span class="unit">m³/day</span>
                         </div>
                     </div>
                     <div class="ci-row">
                         <div class="ci-box">
-                            <div class="label">IC inferior</div>
+                            <div class="label">Lower CI</div>
                             <div class="value" id="pred-lower">—</div>
                         </div>
                         <div class="ci-box">
-                            <div class="label">IC superior</div>
+                            <div class="label">Upper CI</div>
                             <div class="value" id="pred-upper">—</div>
                         </div>
                     </div>
@@ -593,13 +593,13 @@
 
         function setModeUI() {
             if (apiOnline && modelLoaded) {
-                els.modeChip.textContent = 'API conectada';
+                els.modeChip.textContent = 'API connected';
                 els.modeChip.className = 'mode-chip api';
             } else if (apiOnline && !modelLoaded) {
-                els.modeChip.textContent = 'API sem modelo';
+                els.modeChip.textContent = 'API without model';
                 els.modeChip.className = 'mode-chip demo';
             } else {
-                els.modeChip.textContent = 'Modo demo';
+                els.modeChip.textContent = 'Demo mode';
                 els.modeChip.className = 'mode-chip demo';
             }
         }
@@ -678,9 +678,9 @@
             els.predLower.textContent = result.confidence_interval_lower.toFixed(2) + ' m³';
             els.predUpper.textContent = result.confidence_interval_upper.toFixed(2) + ' m³';
             if (result.source === 'api') {
-                els.sourceNote.innerHTML = 'Fonte: modelo Gradient Boosting via <code>/predict</code>. Intervalo ≈ ±1,96 × residual.';
+                els.sourceNote.innerHTML = 'Source: Gradient Boosting model via <code>/predict</code>. Interval ≈ ±1.96 × residual.';
             } else {
-                els.sourceNote.innerHTML = 'Fonte: fórmula física demo no browser (mesmos coeficientes do gerador sintético). Para o modelo treinado, suba a API com Docker.';
+                els.sourceNote.innerHTML = 'Source: in-browser physics-inspired demo (same coefficients as the synthetic generator). Start the API with Docker to use the trained model.';
             }
         }
 
@@ -694,7 +694,7 @@
                 apiOnline = true;
                 modelLoaded = Boolean(data.model_loaded);
                 setModeUI();
-                showError(modelLoaded ? '' : 'API online, mas o modelo ainda não foi carregado. Use o modo demo ou rode o treino.');
+                showError(modelLoaded ? '' : 'API is up, but the model is not loaded yet. Use demo mode or train the model.');
             } catch {
                 apiOnline = false;
                 modelLoaded = false;
@@ -712,7 +712,7 @@
             });
             if (!res.ok) {
                 const detail = await res.json().catch(() => ({}));
-                throw new Error(detail.detail || `Erro HTTP ${res.status}`);
+                throw new Error(detail.detail || `HTTP error ${res.status}`);
             }
             const data = await res.json();
             return { ...data, source: 'api' };
@@ -730,7 +730,7 @@
                         result = await predictViaApi(payload);
                     } catch (err) {
                         result = demoPredict(payload);
-                        showError(`API indisponível (${err.message}). Usando fórmula demo.`);
+                        showError(`API unavailable (${err.message}). Using the demo formula.`);
                         apiOnline = false;
                         modelLoaded = false;
                         setModeUI();
@@ -740,7 +740,7 @@
                 }
                 renderResult(result);
             } catch (err) {
-                showError(err.message || 'Falha ao calcular.');
+                showError(err.message || 'Forecast failed.');
             } finally {
                 els.btnPredict.disabled = false;
             }
