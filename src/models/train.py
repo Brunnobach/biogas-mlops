@@ -2,16 +2,56 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-import mlflow
-import mlflow.sklearn
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.metrics import root_mean_squared_error, mean_absolute_error, r2_score
-from sklearn.pipeline import Pipeline
-import joblib
 import json
 
-from src.features.build_features import build_features, load_data, split_data, build_preprocessor
-from src.utils.config import MODEL_NAME, MLFLOW_TRACKING_URI, RANDOM_STATE
+import joblib
+import mlflow
+import mlflow.sklearn
+import numpy as np
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.metrics import mean_absolute_error, r2_score, root_mean_squared_error
+from sklearn.pipeline import Pipeline
+
+from src.features.build_features import build_features, build_preprocessor, load_data, split_data
+from src.utils.config import MLFLOW_TRACKING_URI, RANDOM_STATE
+
+
+def save_evaluation_plot(pipeline, X_test, y_test, predictions, r2, output_path):
+    """Write predicted-vs-actual and feature-importance figure for the README."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    preprocessor = pipeline.named_steps["preprocessor"]
+    regressor = pipeline.named_steps["regressor"]
+    names = [name.split("__", 1)[-1] for name in preprocessor.get_feature_names_out()]
+    importances = regressor.feature_importances_
+    top = np.argsort(importances)[-10:]
+
+    fig, axes = plt.subplots(1, 2, figsize=(12.8, 5.4))
+    fig.suptitle("Biogas production forecasting (synthetic digester data)", fontsize=13)
+
+    ax = axes[0]
+    ax.scatter(y_test, predictions, s=14, alpha=0.55, c="#2e8b57", edgecolors="none")
+    lo = float(min(np.min(y_test), np.min(predictions)))
+    hi = float(max(np.max(y_test), np.max(predictions)))
+    ax.plot([lo, hi], [lo, hi], linestyle="--", color="black", linewidth=1)
+    ax.set_xlabel("Actual biogas production (m³/day)")
+    ax.set_ylabel("Predicted (m³/day)")
+    ax.set_title(f"Gradient Boosting, test set (R² = {r2:.3f})")
+
+    ax = axes[1]
+    ax.barh(np.array(names)[top], importances[top], color="#2f6db3")
+    ax.set_title("Top 10 feature importances")
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=140, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Evaluation plot saved to {output_path}")
 
 
 def train_model():
@@ -63,6 +103,18 @@ def train_model():
     }
     with open(models_dir / "metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
+
+    try:
+        save_evaluation_plot(
+            pipeline,
+            X_test,
+            y_test,
+            predictions,
+            r2,
+            Path("assets/biogas_pred_vs_actual.png"),
+        )
+    except Exception as exc:
+        print(f"Warning: could not save evaluation plot ({exc}).")
 
     if mlflow_available:
         try:
